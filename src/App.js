@@ -13,44 +13,34 @@ const keys = [
 
 const App = () => {
   console.log(word);
-  const [oldGuess, setOldGuess] = useState([]);
-  const [guess, setGuess] = useState([]);
-  const [count, setCount] = useState(0);
-  const [completed, setCompleted] = useState(false);
-
-  function update(letter) {
-    if (letter && guess.length < 5) setGuess([...guess, letter]);
-  }
-  function remove() {
-    let g = [...guess];
-    g.pop();
-    setGuess(g);
-  }
+  const [oldGuess, setOldGuess] = useState([]); // guess history
+  const [guess, setGuess] = useState([]); // current guess
+  const [count, setCount] = useState(0); // guess count
+  const [completed, setCompleted] = useState(false); // game status
 
   function control() {
-    const inputs = document.querySelector('.active').children;
-    if (guess.length === 5)
+    if (guess.length === 5) {
+      const inputs = document.querySelector('.active').children;
       if (word === guess.toString().replaceAll(',', '')) setCompleted(true);
       else {
         if (count < 5) {
-          let wordArr = word.split('');
-          guess.forEach((g, i) => {
-            let c = 0;
-            const wInd = findAll(wordArr, g);
-            const gInd = findAll(guess, g);
-            wInd.forEach(n => {
-              if (guess[n] === g) {
-                inputs[n].classList.add('animate');
-                inputs[n].classList.add('correct');
-                c++;
+          guess.forEach((g) => {
+            let correctCount = 0;
+            const wordIndex = findAll(word.split(''), g);
+            const guessIndex = findAll(guess, g);
+            wordIndex.forEach(ind => {
+              if (guess[ind] === g) {
+                inputs[ind].classList.add('animate');
+                inputs[ind].classList.add('correct');
+                correctCount++;
               }
             });
-            gInd.forEach(el => {
-              if (wInd.length > c) {
-                if (!inputs[el].classList.contains('correct')) {
-                  inputs[el].classList.add('animate');
-                  inputs[el].classList.add('finded');
-                  c++;
+            guessIndex.forEach(ind => {
+              if (wordIndex.length > correctCount) {
+                if (!inputs[ind].classList.contains('correct')) {
+                  inputs[ind].classList.add('animate');
+                  inputs[ind].classList.add('finded');
+                  correctCount++;
                 }
               }
             });
@@ -62,12 +52,14 @@ const App = () => {
           alert('Game Over');
         }
       }
+    }
     else alert('Fill in the guess');
   }
 
   useEffect(() => {
     console.log('Guessing');
   }, [guess]);
+
   return (
     <div className="App">
       <div className={completed ? 'grid completed' : 'grid'}>
@@ -83,9 +75,15 @@ const App = () => {
       </div>
       <div className="keyboard">
         {keys.map((key, i) =>
-          <button style={{ order: i }} key={key} onClick={() => { update(key) }}>{key}</button>
+          <button style={{ order: i }} key={key} onClick={() => {
+            if (key && guess.length < 5) setGuess([...guess, key]);
+          }}>{key}</button>
         )}
-        <button className="remove" onClick={() => { remove() }}>DELETE</button>
+        <button className="remove" onClick={() => {
+          let g = [...guess];
+          g.pop();
+          setGuess(g);
+        }}>DELETE</button>
         <button className="enter" onClick={() => { control() }}>ENTER</button>
       </div>
     </div>
