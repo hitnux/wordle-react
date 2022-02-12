@@ -14,7 +14,7 @@ const keys = [
 const App = () => {
   const word = cookie.get('word') ? cookie.get('word') : cookie.set('word', words[Math.floor(Math.random() * words.length)]);
   const [oldGuess, setOldGuess] = useState([]); // guess history
-  const [guess, setGuess] = useState(cookie.get('last-guess') ? cookie.get('last-guess').split(',') : []); // current guess
+  const [guess, setGuess] = useState(cookie.get('guess') ? cookie.get('guess').split(',') : []); // current guess
   const [count, setCount] = useState(0); // guess count
   const [completed, setCompleted] = useState(cookie.get('complete') > 0); // game status
 
@@ -46,7 +46,7 @@ const App = () => {
             });
           });
           setGuess([]);
-          cookie.set('last-guess', guess);
+          cookie.set('guess', guess);
           setCount(count + 1);
           setOldGuess([...oldGuess, guess]);
         } else {
@@ -64,6 +64,7 @@ const App = () => {
   useEffect(() => {
     if (completed) {
       cookie.set('complete', 1);
+      cookie.set('guess', guess);
     } else {
       cookie.set('complete', 0);
     }
