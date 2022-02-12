@@ -1,15 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import findAll from './utils/findAll'
 
-function findAll(array, letter) {
-  let arr = [];
-  array.forEach((el, ind) => {
-    if (el === letter) {
-      arr.push(ind);
-    }
-  })
-  return arr;
-}
 const words = ['KURGU', 'YARIŞ', 'SARMA', 'EKSİK']
 
 const word = words[Math.floor(Math.random() * words.length)];
@@ -18,7 +10,6 @@ const keys = [
   'A', 'B', 'C', 'Ç', 'D', 'E', 'F', 'G', 'Ğ', 'H', 'I', 'İ', 'J', 'K', 'L',
   'M', 'N', 'O', 'Ö', 'P', 'R', 'S', 'Ş', 'T', 'U', 'Ü', 'V', 'Y', 'Z'
 ];
-
 
 const App = () => {
   console.log(word);
@@ -64,7 +55,6 @@ const App = () => {
               }
             });
           });
-
           setGuess([]);
           setCount(count + 1);
           setOldGuess([...oldGuess, guess]);
