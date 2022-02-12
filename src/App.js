@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+// utils
 import findAll from './utils/findAll'
-
-const words = ['KURGU', 'YARIŞ', 'SARMA', 'EKSİK']
-
-const word = words[Math.floor(Math.random() * words.length)];
+import cookie from './utils/cookie'
+// data
+import words from './data/words.json'
 
 const keys = [
   'A', 'B', 'C', 'Ç', 'D', 'E', 'F', 'G', 'Ğ', 'H', 'I', 'İ', 'J', 'K', 'L',
@@ -12,11 +12,11 @@ const keys = [
 ];
 
 const App = () => {
-  console.log(word);
+  const word = cookie.get('word') ? cookie.get('word') : cookie.set('word', words[Math.floor(Math.random() * words.length)]);
   const [oldGuess, setOldGuess] = useState([]); // guess history
-  const [guess, setGuess] = useState([]); // current guess
+  const [guess, setGuess] = useState(cookie.get('last-guess') ? cookie.get('last-guess').split(',') : []); // current guess
   const [count, setCount] = useState(0); // guess count
-  const [completed, setCompleted] = useState(false); // game status
+  const [completed, setCompleted] = useState(cookie.get('complete') > 0); // game status
 
   function control() {
     if (guess.length === 5) {
@@ -46,6 +46,7 @@ const App = () => {
             });
           });
           setGuess([]);
+          cookie.set('last-guess', guess);
           setCount(count + 1);
           setOldGuess([...oldGuess, guess]);
         } else {
@@ -59,6 +60,14 @@ const App = () => {
   useEffect(() => {
     console.log('Guessing');
   }, [guess]);
+
+  useEffect(() => {
+    if (completed) {
+      cookie.set('complete', 1);
+    } else {
+      cookie.set('complete', 0);
+    }
+  }, [completed]);
 
   return (
     <div className="App">
