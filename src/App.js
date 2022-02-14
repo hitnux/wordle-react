@@ -24,18 +24,18 @@ const App = () => {
       if (word === guess.toString().replaceAll(',', '')) setCompleted(true);
       else {
         if (count < 5) {
-          guess.forEach((g) => {
+          guess.map((g) => {
             let correctCount = 0;
             const wordIndex = findAll(word.split(''), g);
             const guessIndex = findAll(guess, g);
-            wordIndex.forEach(ind => {
+            wordIndex.map(ind => {
               if (guess[ind] === g) {
                 inputs[ind].classList.add('animate');
                 inputs[ind].classList.add('correct');
                 correctCount++;
               }
             });
-            guessIndex.forEach(ind => {
+            guessIndex.map(ind => {
               if (wordIndex.length > correctCount) {
                 if (!inputs[ind].classList.contains('correct')) {
                   inputs[ind].classList.add('animate');
