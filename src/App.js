@@ -22,37 +22,31 @@ const App = () => {
     if (guess.length === 5) {
       const inputs = document.querySelector('.active').children;
       if (word === guess.toString().replaceAll(',', '')) setCompleted(true);
-      else {
-        if (count < 5) {
-          guess.map((g) => {
-            let correctCount = 0;
-            const wordIndex = findAll(word.split(''), g);
-            const guessIndex = findAll(guess, g);
-            wordIndex.map(ind => {
-              if (guess[ind] === g) {
-                inputs[ind].classList.add('animate');
-                inputs[ind].classList.add('correct');
-                correctCount++;
-              }
-            });
-            guessIndex.map(ind => {
-              if (wordIndex.length > correctCount) {
-                if (!inputs[ind].classList.contains('correct')) {
-                  inputs[ind].classList.add('animate');
-                  inputs[ind].classList.add('finded');
-                  correctCount++;
-                }
-              }
-            });
+      else if (count < 5) {
+        guess.map((g) => {
+          let correctCount = 0;
+          const wordIndex = findAll(word.split(''), g);
+          const guessIndex = findAll(guess, g);
+          wordIndex.map(ind => {
+            if (guess[ind] === g) {
+              inputs[ind].classList.add('animate');
+              inputs[ind].classList.add('correct');
+              correctCount++;
+            }
           });
-          setGuess([]);
-          cookie.set('guess', guess);
-          setCount(count + 1);
-          setOldGuess([...oldGuess, guess]);
-        } else {
-          alert('Game Over');
-        }
-      }
+          guessIndex.map(ind => {
+            if (wordIndex.length > correctCount && !inputs[ind].classList.contains('correct')) {
+              inputs[ind].classList.add('animate');
+              inputs[ind].classList.add('finded');
+              correctCount++;
+            }
+          });
+        });
+        setGuess([]);
+        cookie.set('guess', guess);
+        setCount(count + 1);
+        setOldGuess([...oldGuess, guess]);
+      } else alert('Game Over');
     }
     else alert('Fill in the guess');
   }
